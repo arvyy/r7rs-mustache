@@ -1,0 +1,545 @@
+%%%% Starting test mustache
+Group begin: mustache
+Group begin: comments
+Test begin:
+  test-name: "Inline"
+Test end:
+  result-kind: pass
+  actual-value: "1234567890"
+  expected-value: "1234567890"
+Test begin:
+  test-name: "Multiline"
+Test end:
+  result-kind: pass
+  actual-value: "1234567890"
+  expected-value: "1234567890"
+Test begin:
+  test-name: "Standalone"
+Test end:
+  result-kind: pass
+  actual-value: "Begin.\nEnd."
+  expected-value: "Begin.\nEnd."
+Test begin:
+  test-name: "Indented Standalone"
+Test end:
+  result-kind: pass
+  actual-value: "Begin.\nEnd."
+  expected-value: "Begin.\nEnd."
+Test begin:
+  test-name: "Standalone Line Endings"
+Test end:
+  result-kind: pass
+  actual-value: "\r\n"
+  expected-value: "\r\n"
+Test begin:
+  test-name: "Standalone Without Previous Line"
+Test end:
+  result-kind: pass
+  actual-value: "!"
+  expected-value: "!"
+Test begin:
+  test-name: "Standalone Without Newline"
+Test end:
+  result-kind: pass
+  actual-value: "!\n"
+  expected-value: "!\n"
+Test begin:
+  test-name: "Multiline Standalone"
+Test end:
+  result-kind: pass
+  actual-value: "Begin.\nEnd."
+  expected-value: "Begin.\nEnd."
+Test begin:
+  test-name: "Indented Multiline Standalone"
+Test end:
+  result-kind: pass
+  actual-value: "Begin.\nEnd."
+  expected-value: "Begin.\nEnd."
+Test begin:
+  test-name: "Indented Inline"
+Test end:
+  result-kind: pass
+  actual-value: "  12 \n"
+  expected-value: "  12 \n"
+Test begin:
+  test-name: "Surrounding Whitespace"
+Test end:
+  result-kind: pass
+  actual-value: "12345  67890"
+  expected-value: "12345  67890"
+Group end: comments
+Group begin: delimiters
+Test begin:
+  test-name: "Pair Behavior"
+Test end:
+  result-kind: pass
+  actual-value: "(Hey!)"
+  expected-value: "(Hey!)"
+Test begin:
+  test-name: "Special Characters"
+Test end:
+  result-kind: pass
+  actual-value: "(It worked!)"
+  expected-value: "(It worked!)"
+Test begin:
+  test-name: "Sections"
+Test end:
+  result-kind: fail
+  actual-value: "[\n  I got interpolated.\n  |data|\n\n\n  {{data}}\n  I got interpolated.\n]\n"
+  expected-value: "[\n  I got interpolated.\n  |data|\n\n  {{data}}\n  I got interpolated.\n]\n"
+Group end: delimiters
+Group begin: interpolation
+Test begin:
+  test-name: "No Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "Hello from {Mustache}!"
+  expected-value: "Hello from {Mustache}!"
+Test begin:
+  test-name: "Basic Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "Hello, world!"
+  expected-value: "Hello, world!"
+Test begin:
+  test-name: "HTML Escaping"
+Test end:
+  result-kind: pass
+  actual-value: "These characters should be HTML escaped: &amp; &quot; &lt; &gt;"
+  expected-value: "These characters should be HTML escaped: &amp; &quot; &lt; &gt;"
+Test begin:
+  test-name: "Triple Mustache"
+Test end:
+  result-kind: pass
+  actual-value: "These characters should not be HTML escaped: & \" < >"
+  expected-value: "These characters should not be HTML escaped: & \" < >"
+Test begin:
+  test-name: "Ampersand"
+Test end:
+  result-kind: pass
+  actual-value: "These characters should not be HTML escaped: & \" < >"
+  expected-value: "These characters should not be HTML escaped: & \" < >"
+Test begin:
+  test-name: "Basic Integer Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "\"85 miles an hour!\""
+  expected-value: "\"85 miles an hour!\""
+Test begin:
+  test-name: "Triple Mustache Integer Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "\"85 miles an hour!\""
+  expected-value: "\"85 miles an hour!\""
+Test begin:
+  test-name: "Ampersand Mustache Integer Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "\"85 miles an hour!\""
+  expected-value: "\"85 miles an hour!\""
+Test begin:
+  test-name: "Basic Decimal Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "\"1.21 jiggawatts!\""
+  expected-value: "\"1.21 jiggawatts!\""
+Test begin:
+  test-name: "Triple Mustache Decimal Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "\"1.21 jiggawatts!\""
+  expected-value: "\"1.21 jiggawatts!\""
+Test begin:
+  test-name: "Ampersand Mustache Decimal Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "\"1.21 jiggawatts!\""
+  expected-value: "\"1.21 jiggawatts!\""
+Test begin:
+  test-name: "Basic Null Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "I () be seen!"
+  expected-value: "I () be seen!"
+Test begin:
+  test-name: "Triple Mustache Null Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "I () be seen!"
+  expected-value: "I () be seen!"
+Test begin:
+  test-name: "Ampersand Null Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "I () be seen!"
+  expected-value: "I () be seen!"
+Test begin:
+  test-name: "Basic Context Miss Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "I () be seen!"
+  expected-value: "I () be seen!"
+Test begin:
+  test-name: "Triple Mustache Context Miss Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "I () be seen!"
+  expected-value: "I () be seen!"
+Test begin:
+  test-name: "Ampersand Context Miss Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "I () be seen!"
+  expected-value: "I () be seen!"
+Test begin:
+  test-name: "Dotted Names - Basic Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "\"Joe\" == \"Joe\""
+  expected-value: "\"Joe\" == \"Joe\""
+Test begin:
+  test-name: "Dotted Names - Triple Mustache Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "\"Joe\" == \"Joe\""
+  expected-value: "\"Joe\" == \"Joe\""
+Test begin:
+  test-name: "Dotted Names - Ampersand Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "\"Joe\" == \"Joe\""
+  expected-value: "\"Joe\" == \"Joe\""
+Test begin:
+  test-name: "Dotted Names - Arbitrary Depth"
+Test end:
+  result-kind: pass
+  actual-value: "\"Phil\" == \"Phil\""
+  expected-value: "\"Phil\" == \"Phil\""
+Test begin:
+  test-name: "Dotted Names - Broken Chains"
+Test end:
+  result-kind: pass
+  actual-value: "\"\" == \"\""
+  expected-value: "\"\" == \"\""
+Test begin:
+  test-name: "Dotted Names - Broken Chain Resolution"
+Test end:
+  result-kind: pass
+  actual-value: "\"\" == \"\""
+  expected-value: "\"\" == \"\""
+Test begin:
+  test-name: "Dotted Names - Initial Resolution"
+Test end:
+  result-kind: pass
+  actual-value: "\"Phil\" == \"Phil\""
+  expected-value: "\"Phil\" == \"Phil\""
+Test begin:
+  test-name: "Dotted Names - Context Precedence"
+Test end:
+  result-kind: pass
+  actual-value: ""
+  expected-value: ""
+Test begin:
+  test-name: "Implicit Iterators - Basic Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "Hello, world!"
+  expected-value: "Hello, world!"
+Test begin:
+  test-name: "Implicit Iterators - HTML Escaping"
+Test end:
+  result-kind: pass
+  actual-value: "These characters should be HTML escaped: &amp; &quot; &lt; &gt;"
+  expected-value: "These characters should be HTML escaped: &amp; &quot; &lt; &gt;"
+Test begin:
+  test-name: "Implicit Iterators - Triple Mustache"
+Test end:
+  result-kind: pass
+  actual-value: "These characters should not be HTML escaped: & \" < >"
+  expected-value: "These characters should not be HTML escaped: & \" < >"
+Test begin:
+  test-name: "Implicit Iterators - Ampersand"
+Test end:
+  result-kind: pass
+  actual-value: "These characters should not be HTML escaped: & \" < >"
+  expected-value: "These characters should not be HTML escaped: & \" < >"
+Test begin:
+  test-name: "Implicit Iterators - Basic Integer Interpolation"
+Test end:
+  result-kind: pass
+  actual-value: "\"85 miles an hour!\""
+  expected-value: "\"85 miles an hour!\""
+Test begin:
+  test-name: "Interpolation - Surrounding Whitespace"
+Test end:
+  result-kind: pass
+  actual-value: "| --- |"
+  expected-value: "| --- |"
+Test begin:
+  test-name: "Triple Mustache - Surrounding Whitespace"
+Test end:
+  result-kind: pass
+  actual-value: "| --- |"
+  expected-value: "| --- |"
+Test begin:
+  test-name: "Ampersand - Surrounding Whitespace"
+Test end:
+  result-kind: pass
+  actual-value: "| --- |"
+  expected-value: "| --- |"
+Test begin:
+  test-name: "Interpolation - Standalone"
+Test end:
+  result-kind: pass
+  actual-value: "  ---\n"
+  expected-value: "  ---\n"
+Test begin:
+  test-name: "Triple Mustache - Standalone"
+Test end:
+  result-kind: pass
+  actual-value: "  ---\n"
+  expected-value: "  ---\n"
+Test begin:
+  test-name: "Ampersand - Standalone"
+Test end:
+  result-kind: pass
+  actual-value: "  ---\n"
+  expected-value: "  ---\n"
+Test begin:
+  test-name: "Interpolation With Padding"
+Test end:
+  result-kind: pass
+  actual-value: "|---|"
+  expected-value: "|---|"
+Test begin:
+  test-name: "Triple Mustache With Padding"
+Test end:
+  result-kind: pass
+  actual-value: "|---|"
+  expected-value: "|---|"
+Test begin:
+  test-name: "Ampersand With Padding"
+Test end:
+  result-kind: pass
+  actual-value: "|---|"
+  expected-value: "|---|"
+Group end: interpolation
+Group begin: inverted
+Test begin:
+  test-name: "Falsey"
+Test end:
+  result-kind: pass
+  actual-value: "\"This should be rendered.\""
+  expected-value: "\"This should be rendered.\""
+Test begin:
+  test-name: "Truthy"
+Test end:
+  result-kind: pass
+  actual-value: "\"\""
+  expected-value: "\"\""
+Test begin:
+  test-name: "Context"
+Test end:
+  result-kind: pass
+  actual-value: "\"\""
+  expected-value: "\"\""
+Test begin:
+  test-name: "List"
+Test end:
+  result-kind: pass
+  actual-value: "\"\""
+  expected-value: "\"\""
+Test begin:
+  test-name: "Empty List"
+Test end:
+  result-kind: pass
+  actual-value: "\"Yay lists!\""
+  expected-value: "\"Yay lists!\""
+Test begin:
+  test-name: "Doubled"
+Test end:
+  result-kind: pass
+  actual-value: "\n               * first\n               * second\n               * third\n               "
+  expected-value: "\n               * first\n               * second\n               * third\n               "
+Test begin:
+  test-name: "Nested (Falsey)"
+Test end:
+  result-kind: pass
+  actual-value: "| A B C D E |"
+  expected-value: "| A B C D E |"
+Test begin:
+  test-name: "Nested (Truthy)"
+Test end:
+  result-kind: pass
+  actual-value: "| A  E |"
+  expected-value: "| A  E |"
+Test begin:
+  test-name: "Context Misses"
+Test end:
+  result-kind: pass
+  actual-value: "[Cannot find key 'missing'!]"
+  expected-value: "[Cannot find key 'missing'!]"
+Test begin:
+  test-name: "Dotted Names - Truthy"
+Test end:
+  result-kind: pass
+  actual-value: "\"\" == \"\""
+  expected-value: "\"\" == \"\""
+Test begin:
+  test-name: "Dotted Names - Falsey"
+Test end:
+  result-kind: pass
+  actual-value: "\"Not Here\" == \"Not Here\""
+  expected-value: "\"Not Here\" == \"Not Here\""
+Test begin:
+  test-name: "Dotted Names - Broken Chains"
+Test end:
+  result-kind: pass
+  actual-value: "\"Not Here\" == \"Not Here\""
+  expected-value: "\"Not Here\" == \"Not Here\""
+Test begin:
+  test-name: "Surrounding Whitespace"
+Test end:
+  result-kind: pass
+  actual-value: " | \t|\t | \n"
+  expected-value: " | \t|\t | \n"
+Test begin:
+  test-name: "Internal Whitespace"
+Test end:
+  result-kind: pass
+  actual-value: " |  \n  | \n"
+  expected-value: " |  \n  | \n"
+Test begin:
+  test-name: "Indented Inline Sections"
+Test end:
+  result-kind: pass
+  actual-value: " NO\n WAY\n"
+  expected-value: " NO\n WAY\n"
+Test begin:
+  test-name: "Standalone Lines"
+Test end:
+  result-kind: pass
+  actual-value: "\n               |\n               | This Is\n               |\n               | A Line\n               "
+  expected-value: "\n               |\n               | This Is\n               |\n               | A Line\n               "
+Test begin:
+  test-name: "Standalone Indented Lines"
+Test end:
+  result-kind: pass
+  actual-value: "\n               |\n               | This Is\n               |\n               | A Line\n               "
+  expected-value: "\n               |\n               | This Is\n               |\n               | A Line\n               "
+Test begin:
+  test-name: "Standalone Line Endings"
+Test end:
+  result-kind: pass
+  actual-value: "|\r\n|"
+  expected-value: "|\r\n|"
+Test begin:
+  test-name: "Standalone Without Previous Line"
+Test end:
+  result-kind: pass
+  actual-value: "^\n/"
+  expected-value: "^\n/"
+Test begin:
+  test-name: "Standalone Without Newline"
+Test end:
+  result-kind: pass
+  actual-value: "^\n/\n"
+  expected-value: "^\n/\n"
+Test begin:
+  test-name: "Padding"
+Test end:
+  result-kind: pass
+  actual-value: "|=|"
+  expected-value: "|=|"
+Group end: inverted
+Group begin: partials
+Test begin:
+  test-name: "Basic Behavior"
+Test end:
+  result-kind: pass
+  actual-value: "\"from partial\""
+  expected-value: "\"from partial\""
+Test begin:
+  test-name: "Failed Lookup"
+Test end:
+  result-kind: pass
+  actual-value: "\"\""
+  expected-value: "\"\""
+Test begin:
+  test-name: "Context"
+Test end:
+  result-kind: pass
+  actual-value: "\"*content*\""
+  expected-value: "\"*content*\""
+Test begin:
+  test-name: "Recursion"
+Test end:
+  result-kind: pass
+  actual-value: "X<Y<>>"
+  expected-value: "X<Y<>>"
+Test begin:
+  test-name: "Surrounding Whitespace"
+Test end:
+  result-kind: pass
+  actual-value: "| \t|\t |"
+  expected-value: "| \t|\t |"
+Test begin:
+  test-name: "Inline Indentation"
+Test end:
+  result-kind: pass
+  actual-value: "  |  >\n>\n"
+  expected-value: "  |  >\n>\n"
+Test begin:
+  test-name: "Standalone Line Endings"
+Test end:
+  result-kind: pass
+  actual-value: "|\r\n>|"
+  expected-value: "|\r\n>|"
+Group end: partials
+Group begin: sections
+Test begin:
+  test-name: "Truthy"
+Test end:
+  result-kind: pass
+  actual-value: "\"This should be rendered.\""
+  expected-value: "\"This should be rendered.\""
+Test begin:
+  test-name: "Falsey"
+Test end:
+  result-kind: pass
+  actual-value: "\"\""
+  expected-value: "\"\""
+Test begin:
+  test-name: "Context"
+Test end:
+  result-kind: pass
+  actual-value: "\"Hi Joe.\""
+  expected-value: "\"Hi Joe.\""
+Test begin:
+  test-name: "Parent contexts"
+Test end:
+  result-kind: pass
+  actual-value: "\"foo, bar, baz\""
+  expected-value: "\"foo, bar, baz\""
+Test begin:
+  test-name: "Variable test"
+Test end:
+  result-kind: pass
+  actual-value: "\"bar is bar\""
+  expected-value: "\"bar is bar\""
+Test begin:
+  test-name: "List Contexts"
+Test end:
+  result-kind: pass
+  actual-value: "a1.A1x.A1y."
+  expected-value: "a1.A1x.A1y."
+Test begin:
+  test-name: "Deeply Nested Contexts"
+Test end:
+  result-kind: pass
+  actual-value: "\n               1\n               121\n               12321\n               1234321\n               123454321\n               12345654321\n               123454321\n               1234321\n               12321\n               121\n               1\n               "
+  expected-value: "\n               1\n               121\n               12321\n               1234321\n               123454321\n               12345654321\n               123454321\n               1234321\n               12321\n               121\n               1\n               "
+Group end: sections
+Group end: mustache
+# of expected passes      87
+# of unexpected failures  1
