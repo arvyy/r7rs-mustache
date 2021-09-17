@@ -30,8 +30,6 @@
          (tokens (remove-non-visible tokens))
          (tokens (convert-string-tokens tokens))
          (tokens (parse-interp+sections tokens)))
-    (display (tpl->string tokens))
-    (newline)
     tokens))
 
 (define (tpl->string tokens)
@@ -62,6 +60,23 @@
     tokens)
   (get-output-string out))
 
+;;TODO remove this
+(define (debug-tokens tokens)
+  (for-each
+    (lambda (t)
+      (cond
+        ((token-str? t) (display (string-append "#<<token-str> " (token-str-content t) "> ")))
+        ((token-nl? t) (display "#<<token-nl>> "))
+        ((token-section-open? t) (display (string-append "#<<token-open> " (token-section-open-tag t) "> ")))
+        ((token-section-close? t) (display "#<<token-close>> "))
+        ((token-ws? t) (display (string-append "#<<token-ws> " (number->string (token-ws-count t)) "> ")))
+        ((token-interp? t) (display (string-append "#<<token-interp> " (token-interp-tag t) "> ")))
+        (else (display t)))) 
+    tokens
+    )
+  
+  )
+
 (define (standalone/remove? token)
   (or (token-comment? token)
       (token-delimchager? token)))
@@ -71,145 +86,77 @@
       (token-section-close? token)))
 
 (define (replace-standalone tokens)
-  (let loop ((tokens (cons (token-nl '(#\newline)) tokens))
+  (let loop ((tokens tokens)
              (result/inv '())
-             (first #t)
-             (prev-standalone #f))
+             (first #t))
+    
     (cond
       ((null? tokens) (reverse result/inv))
       
-      ;; tokens to remove
-      ((or (match-follows tokens token-nl? token-ws? standalone/remove? token-ws? token-nl?)
-           (match-follows tokens token-nl? token-ws? standalone/remove? token-nl?)) =>
-       (lambda (tokens*)
-         ;; retain initial newline
-         (loop (if (or first ) 
-                   tokens*
-                   (cons (car tokens) tokens*))
-               result/inv
-               #f
-               #t)))
-      
-      ;; tokens to remove
-      ((or (match-follows tokens token-nl? standalone/remove? token-ws? token-nl?)
-           (match-follows tokens token-nl? standalone/remove? token-nl?)) =>
-       (lambda (tokens*)
-         ;; retain initial newline
-         (loop (if (or first ) 
-                   tokens*
-                   (cons (car tokens) tokens*))
-               result/inv
-               #f
-               #t)))
-      
-      ;; tokens to remove when it's a last line
-      ((or (match-follows tokens token-nl? token-ws? standalone/remove? token-ws? eof-object?)
-           (match-follows tokens token-nl? token-ws? standalone/remove? eof-object?)
-           (match-follows tokens token-nl? standalone/remove? token-ws? eof-object?)
-           (match-follows tokens token-nl? standalone/remove? eof-object?)) =>
-       (lambda (tokens*)
-         ;; retain initial newline
-         (loop '()
-               (if (or first )
-                   result/inv
-                   (cons (car tokens)
-                         result/inv))
-               #f 
-               #t)))
-      
-      ;; tokens to trim
-      ((or (match-follows tokens token-nl? token-ws? standalone/trim? token-ws? token-nl?)
-           (match-follows tokens token-nl? token-ws? standalone/trim? token-nl?)) => 
-       (lambda (tokens*)
-         ;; retain initial newline and the trimmed token
-         (loop (if (or first)
-                   tokens*
-                   (cons (car tokens) tokens*))
-               (append (list (caddr tokens))
-                       result/inv)
-               #f
-               #t)))
-      
-      ((or (match-follows tokens token-nl? standalone/trim? token-ws? token-nl?)
-           (match-follows tokens token-nl? standalone/trim? token-nl?)) => 
-       (lambda (tokens*)
-         ;; retain initial newline and the trimmed token
-         (loop (if (or first)
-                   tokens*
-                   (cons (car tokens) tokens*))
-               (append (list (cadr tokens))
-                       result/inv)
-               #f
-               #t)))
-      
-      ;; tokens to trim when it's a last line
-      ((or (match-follows tokens token-nl? token-ws? standalone/trim? token-ws? eof-object?)
-           (match-follows tokens token-nl? token-ws? standalone/trim? eof-object?)) => 
-       (lambda (tokens*)
-         ;; retain initial newline and the trimmed token
-         (loop '()
-               (append (list (caddr tokens))
-                       (if (or first ) '() (list (car tokens)))
-                       result/inv)
-               #f
-               #t)))
-      
-      ((or (match-follows tokens token-nl? standalone/trim? token-ws? eof-object?)
-           (match-follows tokens token-nl? standalone/trim? eof-object?)) => 
-       (lambda (tokens*)
-         ;; retain initial newline and the trimmed token
-         (loop '()
-               (append (list (cadr tokens))
-                       (if (or first ) '() (list (car tokens)))
-                       result/inv)
-               #f
-               #t)))
-      
-      ;; token for partial, remembering the indentation
-      ((or (match-follows tokens token-nl? token-ws? token-partial? token-ws? token-nl?)
-           (match-follows tokens token-nl? token-ws? token-partial? token-nl?)) =>
+      ((and first
+            (or (match-follows tokens standalone/remove? token-ws? token-nl?)
+                (match-follows tokens standalone/remove? token-nl?)
+                (match-follows tokens token-ws? standalone/remove? token-ws? token-nl?)
+                (match-follows tokens token-ws? standalone/remove? token-nl?))) =>
        (lambda (tokens*)
          (loop tokens*
-               (append (list (partial (token-partial-tag (caddr tokens))
-                                      (token-ws-count (cadr tokens))))
-                       (if (or first ) '() (list (car tokens)))
-                       result/inv)
-               #f
+               result/inv
                #t)))
       
-      ((or (match-follows tokens token-nl? token-partial? token-ws? token-nl?)
-           (match-follows tokens token-nl? token-partial? token-nl?)) =>
+      ((and first
+            (or (match-follows tokens token-ws? standalone/remove? token-ws? eof-object?)
+                (match-follows tokens token-ws? standalone/remove? eof-object?)
+                (match-follows tokens standalone/remove? token-ws? eof-object?)
+                (match-follows tokens standalone/remove? eof-object?))) =>
+       (lambda (tokens*)
+         (loop '()
+               result/inv
+               #t)))
+      
+      ((and first
+            (or (match-follows tokens token-ws? standalone/trim? token-ws? token-nl?)
+                (match-follows tokens token-ws? standalone/trim? token-nl?)
+                (match-follows tokens token-ws? standalone/trim? token-ws? eof-object?)
+                (match-follows tokens token-ws? standalone/trim? eof-object?))) => 
+       (lambda (tokens*)
+         (loop tokens*
+               (append (list (cadr tokens))
+                       result/inv)
+               #t)))
+      
+      ((and first
+            (or (match-follows tokens standalone/trim? token-ws? token-nl?)
+                (match-follows tokens standalone/trim? token-nl?)
+                (match-follows tokens standalone/trim? token-ws? eof-object?)
+                (match-follows tokens standalone/trim? eof-object?))) => 
+       (lambda (tokens*)
+         (loop tokens*
+               (append (list (car tokens))
+                       result/inv)
+               #t)))
+      
+      ((and first
+            (or (match-follows tokens token-ws? token-partial? token-ws? token-nl?)
+                (match-follows tokens token-ws? token-partial? token-nl?)
+                (match-follows tokens token-ws? token-partial? token-ws? eof-object?)
+                (match-follows tokens token-ws? token-partial? eof-object?))) =>
        (lambda (tokens*)
          (loop tokens*
                (append (list (partial (token-partial-tag (cadr tokens))
-                                      0))
-                       (if (or first ) '() (list (car tokens)))
+                                      (token-ws-count (car tokens))))
                        result/inv)
-               #f
                #t)))
       
-      ;; token for partial, remembering the indentation, when on last line
-      ((or (match-follows tokens token-nl? token-ws? token-partial? token-ws? eof-object?)
-           (match-follows tokens token-nl? token-ws? token-partial? eof-object?)) =>
+      ((and first
+            (or (match-follows tokens token-partial? token-ws? token-nl?)
+                (match-follows tokens token-partial? token-nl?)
+                (match-follows tokens token-partial? token-ws? eof-object?)
+                (match-follows tokens token-partial? eof-object?))) =>
        (lambda (tokens*)
-         (loop '()
-               (append 
-                 (list (partial (token-partial-tag (caddr tokens))
-                                      (token-ws-count (cadr tokens))))
-                       (if (or first ) '() (list (car tokens)))
-                       result/inv) 
-               #f
-               #t)))
-      
-      ((or (match-follows tokens token-nl? token-partial? token-ws? eof-object?)
-           (match-follows tokens token-nl? token-partial? eof-object?)) =>
-       (lambda (tokens*)
-         (loop '()
-               (append (list (partial (token-partial-tag (cadr tokens))
+         (loop tokens*
+               (append (list (partial (token-partial-tag (car tokens))
                                       0))
-                       (if (or first ) '() (list (car tokens)))
                        result/inv)
-               #f
                #t)))
       
       ((match-follows tokens token-partial?) => (lambda (tokens*)
@@ -217,15 +164,11 @@
                                                         (cons (partial (token-partial-tag (car tokens))
                                                                        0)
                                                               result/inv)
-                                                        #f
                                                         #f)))
       
       (else (loop (cdr tokens)
-                  (if (or first)
-                      result/inv
-                      (cons (car tokens) result/inv))
-                  #f
-                  #f)))))
+                  (cons (car tokens) result/inv)
+                  (token-nl? (car tokens)))))))
 
 (define (convert-string-tokens tokens)
   (let loop ((tokens tokens)

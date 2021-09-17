@@ -141,7 +141,8 @@
                          '()
                          (string->list new-open)
                          (string->list new-close)
-                         (resolve-ws/str))))
+                         (cons (token-delimchager new-open new-close) 
+                               (resolve-ws/str)))))
     
     (define (process-open-delim in*)
       (cond

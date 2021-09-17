@@ -17,7 +17,6 @@
 
 (test-begin "mustache")
 
-
 (test-group 
   "comments"
   (include "mustache-test-comments.scm"))
