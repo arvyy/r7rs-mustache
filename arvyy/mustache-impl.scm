@@ -8,7 +8,8 @@
 
 (define default-collection
   (compose-collections 
-    vector-collection))
+    vector-collection
+    stream-collection))
 
 (define (port->string port)
   (define str (read-string 2000000000 port))
@@ -34,7 +35,18 @@
                             parts))))))))
   (delete-duplicates! partials))
 
-(define (compile root partial-locator)
+(define compile
+  (case-lambda
+    ((template) (compile/without-partials template))
+    ((root partial-locator) (compile/with-partials root partial-locator))))
+
+(define (compile/without-partials template)
+  (compile/with-partials #f (lambda (partial)
+                              (if partial
+                                  #f
+                                  template))))
+
+(define (compile/with-partials root partial-locator)
   
   ;; returns 2 values: missing partials (found in part) and compiled part template
   (define (compile-part part resolved-partials)
@@ -63,7 +75,6 @@
 
 (define current-lookup (make-parameter default-lookup))
 (define current-collection (make-parameter default-collection))
-(define current-list-constructor (make-parameter vector))
 (define current-writer (make-parameter default-writer))
 
 (define execute
@@ -78,7 +89,6 @@
      (define template (cdr (assoc root partials)))
      (define lookup (current-lookup))
      (define collection* (current-collection))
-     (define lst-constructor (current-list-constructor))
      (define writer (current-writer))
      (executor-execute template 
                        (list data) 
@@ -88,5 +98,4 @@
                        (collection-pred-proc collection*)
                        (collection-empty?-proc collection*)
                        (collection-for-each-proc collection*)
-                       lst-constructor
                        writer))))

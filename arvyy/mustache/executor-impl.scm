@@ -34,7 +34,7 @@
                            (list value)
                            lookup))))
 
-(define (execute template objs-stack partials out lookup collection? collection-empty? collection-for-each lst-constructor writer)
+(define (execute template objs-stack partials out lookup collection? collection-empty? collection-for-each writer)
   (define (execute-h template indent objs-stack)
     (for-each
       (lambda (fragment)
@@ -61,19 +61,22 @@
                                          objs-stack
                                          lookup))
                  (inner-template (section-content fragment)))
-             ;; coerce value to collection
-             (define value*
-               (cond
-                 ((not value) (lst-constructor))
-                 ((not (collection? value)) (lst-constructor value))
-                 (else value)))
-             (if (section-invert? fragment)
-                 (when (collection-empty? value*)
-                   (execute-h inner-template indent objs-stack))
-                 (collection-for-each
-                  (lambda (el)
-                    (execute-h inner-template indent (cons el objs-stack)))
-                  value*))))
+             
+             (cond
+               ((not value)
+                (when (section-invert? fragment)
+                  (execute-h inner-template indent objs-stack)))
+               ((not (collection? value))
+                (unless (section-invert? fragment)
+                  (execute-h inner-template indent (cons value objs-stack))))
+               (else
+                 (if (section-invert? fragment)
+                     (when (collection-empty? value)
+                       (execute-h inner-template indent objs-stack))
+                     (collection-for-each
+                       (lambda (el)
+                         (execute-h inner-template indent (cons el objs-stack)))
+                       value))))))
           
           ((partial? fragment)
            (let ()

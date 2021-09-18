@@ -1,6 +1,7 @@
 (define-library
   (arvyy mustache collection)
-  (import (scheme base))
+  (import (scheme base)
+          (srfi 41))
   (export 
     collection
     collection-pred-proc
@@ -9,6 +10,7 @@
     
     compose-collections
     vector-collection
+    stream-collection
     list-collection)
   (begin
 
@@ -28,6 +30,11 @@
       (collection list?
                   null?
                   for-each))
+    
+    (define stream-collection
+      (collection stream?
+                  stream-null?
+                  stream-for-each))
 
     (define (compose-collections . collections)
       (define (find-collection object)

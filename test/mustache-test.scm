@@ -1,7 +1,15 @@
 (import (scheme base)
         (scheme write)
         (arvyy mustache)
-        (srfi 64))
+        (srfi 41))
+
+(cond-expand
+  (chibi
+    (import (rename (except (chibi test) test-equal)
+                    (test test-equal))))
+  ((library (srfi 64))
+   (import (srfi 64)))
+  (else (error "No testing library found")))
 
 (define-syntax test-mustache
   (syntax-rules ()
@@ -40,5 +48,9 @@
 (test-group
   "sections"
   (include "mustache-test-sections.scm"))
+
+(test-group
+  "implementation-specific"
+  (include "mustache-test-implementation-specific.scm"))
 
 (test-end)
