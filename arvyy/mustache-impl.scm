@@ -12,10 +12,15 @@
     stream-collection))
 
 (define (port->string port)
-  (define str (read-string 2000000000 port))
-  (if (eof-object? str)
-      ""
-      str))
+  (define str
+    (let loop ((chunks '())
+               (chunk (read-string 2000 port)))
+      (if (eof-object? chunk)
+          (apply string-append (reverse chunks))
+          (loop (cons chunk chunks)
+                (read-string 2000 port)))))
+  (close-input-port port)
+  str)
 
 (define (template-get-partials template)
   (define partials
