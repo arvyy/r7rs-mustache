@@ -1,16 +1,14 @@
 test-chibi:
-	cd test && \
-	chibi-scheme -I .. mustache-test.scm
+	chibi-scheme -m '(arvyy mustache-test)' -e '(run-tests)'
 
 test-gauche:
-	cd test && \
-	gosh -I .. mustache-test.scm
+	gosh -I . -u 'arvyy.mustache-test' -e '(begin (run-tests) (exit))' -b
 
 build-doc:
 	pandoc -f markdown -t html5 -o readme.html readme.md
 
 package:
-	snow-chibi package --version=1.0 --authors="Arvydas Silanskas" \
+	snow-chibi package --version=1.0.1 --authors="Arvydas Silanskas" \
 		--maintainers="Arvydas Silanskas <nma.arvydas.silanskas@gmail.com>" --doc=readme.html \
 		--description="Mustache templating 1.2.1 implementation" \
 		--license="mit" \
