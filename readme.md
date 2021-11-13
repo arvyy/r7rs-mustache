@@ -5,6 +5,8 @@ Implementation passes all tests in the spec.
 
 This readme only describes specifics of this implementation. For general semantics, see https://mustache.github.io/mustache.5.html
 
+Report issues at https://github.com/arvyy/r7rs-mustache/issues
+
 ## Base usage
 
 `(import (arvyy mustache))`
