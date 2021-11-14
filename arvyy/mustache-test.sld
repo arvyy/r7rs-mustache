@@ -3,8 +3,11 @@
 
   (import (scheme base)
           (scheme write)
-          (arvyy mustache)
-          (srfi 41))
+          (arvyy mustache))
+
+  (cond-expand
+    ((library (srfi 41))
+     (import (srfi 41))))
   
   (export run-tests)
 

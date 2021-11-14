@@ -61,11 +61,13 @@
                      "{{#bar}}{{.}};{{/bar}}"
                      "0;1;2;"))
 
-    (parameterize
-      ((current-collection stream-collection)
-       (current-lookup foo-lookup))
-      (test-mustache "Stream collection"
-                     (foo (list->stream '(0 1 2)))
-                     "{{#bar}}{{.}};{{/bar}}"
-                     "0;1;2;")))
+    (cond-expand
+      ((library (srfi 41))
+       (parameterize
+         ((current-collection stream-collection)
+          (current-lookup foo-lookup))
+         (test-mustache "Stream collection"
+                        (foo (list->stream '(0 1 2)))
+                        "{{#bar}}{{.}};{{/bar}}"
+                        "0;1;2;")))))
 

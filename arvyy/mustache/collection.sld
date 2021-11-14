@@ -10,8 +10,18 @@
     
     compose-collections
     vector-collection
-    stream-collection
     list-collection)
+  
+  (cond-expand
+    ((library (srfi 41))
+     (import (srfi 41))
+     (begin
+       (define stream-collection
+         (collection stream?
+                     stream-null?
+                     stream-for-each)))
+     (export stream-collection)))
+  
   (begin
 
     (define-record-type <collection>
@@ -31,11 +41,6 @@
                   null?
                   for-each))
     
-    (define stream-collection
-      (collection stream?
-                  stream-null?
-                  stream-for-each))
-
     (define (compose-collections . collections)
       (define (find-collection object)
         (let loop ((collections collections))

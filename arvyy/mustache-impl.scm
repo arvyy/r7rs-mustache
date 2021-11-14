@@ -6,10 +6,15 @@
   (compose-lookups 
     alist-lookup))
 
-(define default-collection
-  (compose-collections 
-    vector-collection
-    stream-collection))
+(cond-expand
+  ((library (srfi 41))
+   (define default-collection
+     (compose-collections 
+       vector-collection
+       stream-collection)))
+  (else
+    (define default-collection vector-collection)))
+
 
 (define (port->string port)
   (define str
