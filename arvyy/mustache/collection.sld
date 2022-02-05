@@ -12,16 +12,6 @@
     vector-collection
     list-collection)
   
-  (cond-expand
-    ((library (srfi 41))
-     (import (srfi 41))
-     (begin
-       (define stream-collection
-         (collection stream?
-                     stream-null?
-                     stream-for-each)))
-     (export stream-collection)))
-  
   (begin
 
     (define-record-type <collection>
@@ -66,4 +56,14 @@
         (lambda (proc object)
           (cond
             ((find-collection object) => (lambda (c) ((collection-for-each-proc c) proc object)))
-            (else (error "Collection not found"))))))))
+            (else (error "Collection not found")))))))
+
+  (cond-expand
+    ((library (srfi 41))
+     (import (srfi 41))
+     (begin
+       (define stream-collection
+         (collection stream?
+                     stream-null?
+                     stream-for-each)))
+     (export stream-collection))))

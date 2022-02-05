@@ -57,10 +57,13 @@
                  (writer value out))))
 
           ((section? fragment)
-           (let ((value (lookup-in-stack (section-ref fragment)
-                                         objs-stack
-                                         lookup))
-                 (inner-template (section-content fragment)))
+           (let* ((name (section-ref fragment))
+                  (value (if (equal? '(".") name)
+                             (car objs-stack)
+                             (lookup-in-stack (section-ref fragment)
+                                              objs-stack
+                                              lookup)))
+                  (inner-template (section-content fragment)))
              
              (cond
                ((not value)
